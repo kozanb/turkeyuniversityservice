@@ -23,23 +23,20 @@ block content
 
           detailDiv.id= 'university-detail';
 
-          detailDiv.innerHTML = '<br> Üniversite Adı: ' + universityDetail.name +'<br>' +
-          'Üniversite Türü: ' + universityDetail.type + '<br>' +
-          'Websitesi: <a href="' + universityDetail.website + '">' + universityDetail.website + '</a><br>' +
-          'Adresi: ' + universityDetail.address + '<br><br>' +
+          detailDiv.innerHTML = '<br> Üniversite Adı: ' + (universityDetail.name || '') +'<br>' +
+          'Üniversite Türü: ' + (universityDetail.type || '') + '<br>' +
+          'Websitesi: <a href="' + (universityDetail.website || '') + '">' + (universityDetail.website || '') + '</a><br>' +
+          'Adresi: ' + (universityDetail.address || '') + '<br><br>' +
           'Fakülteler: <ul></ul><br>' ;
 
           (Object.values(universityDetail.faculties || {}) || []).map(function(faculty){
             var facultyLi = document.createElement('li');
 
-            facultyLi.innerHTML = 'Adı: '+ faculty.name + '<br><br> Bölümler: ' + faculty.departments.join(' - ') + '<hr>';
+            facultyLi.innerHTML = 'Adı: '+ (faculty.name || '') + '<br><br> Bölümler: ' + (faculty.departments || []).join(' - ') + '<hr>';
 
             $('ul',detailDiv).append(facultyLi)
           }); 
 
-          $('ul',detailDiv)
-
           $('body').append(detailDiv);
-
       });
 
