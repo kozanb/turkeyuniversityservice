@@ -2,4 +2,44 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Tüm listeye https://turkey-university-api.herokuapp.com/list/get API url'inden erişebilirsiniz.
+  -var finalList = Object.values(list);
+  meta(name="data", content="#{JSON.stringify(finalList)}")
+  p
+  select(id="selectList")
+    option Üniversite Adı Seçin
+    -for(var i = 0;i<finalList.length;i++){
+    option(value="#{finalList[i].name}") #{finalList[i].name}
+    -}
+
+    script.
+      $('#selectList').on('change', function(e) {
+          var selectedIndex = (parseInt($(this).prop('selectedIndex')) || 0) -1;
+          var universityDetail = (JSON.parse($('[name="data"]').attr('content') || '[]') || [])[selectedIndex] || {};
+
+          $('#university-detail').length !== 0 && $('#university-detail').remove();
+
+          var detailDiv = document.createElement('div');
+
+          detailDiv.id= 'university-detail';
+
+          detailDiv.innerHTML = '<br> Üniversite Adı: ' + universityDetail.name +'<br>' +
+          'Üniversite Türü: ' + universityDetail.type + '<br>' +
+          'Websitesi: <a href="' + universityDetail.website + '">' + universityDetail.website + '</a><br>' +
+          'Adresi: ' + universityDetail.address + '<br><br>' +
+          'Fakülteler: <ul></ul><br>' ;
+
+          (Object.values(universityDetail.faculties || {}) || []).map(function(faculty){
+            var facultyLi = document.createElement('li');
+
+            facultyLi.innerHTML = 'Adı: '+ faculty.name + '<br><br> Bölümler: ' + faculty.departments.join(' - ') + '<hr>';
+
+            $('ul',detailDiv).append(facultyLi)
+          }); 
+
+          $('ul',detailDiv)
+
+          $('body').append(detailDiv);
+
+      });
+
